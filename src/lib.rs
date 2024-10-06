@@ -8,6 +8,15 @@ pub struct Match {
     candidate: String,
 }
 
+impl Match {
+    pub fn new(score: impl Into<f64>, candidate: impl Into<String>) -> Self {
+        Self {
+            score: score.into(),
+            candidate: candidate.into(),
+        }
+    }
+}
+
 pub fn fuzzy_match(query: &str, candidates: &Vec<&str>, threshold: f64) -> Vec<Match> {
     let mut matches = candidates
         .iter()
@@ -27,10 +36,7 @@ pub fn fuzzy_match(query: &str, candidates: &Vec<&str>, threshold: f64) -> Vec<M
                 3.0 * (1 - levenshtein_distance / candidate.len()) as f64 + 7.0 * n_gram_similarity;
 
             if score <= threshold {
-                Some(Match {
-                    score,
-                    candidate: candidate.to_string(),
-                })
+                Some(Match::new(score, *candidate))
             } else {
                 None
             }
