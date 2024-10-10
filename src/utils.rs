@@ -1,2 +1,2 @@
 pub mod levenshtein;
-pub mod n_gram;
+pub mod median;

@@ -32,3 +32,11 @@ pub fn get_distance(
 
     dp[m][n]
 }
+
+pub fn normalize_similarity(shorter_string_length: usize, distance: usize) -> f64 {
+    if distance > shorter_string_length {
+        return 0.0
+    }
+    
+    return 1.0 / f64::exp(distance as f64 / (shorter_string_length as f64 - distance as f64) );
+}
