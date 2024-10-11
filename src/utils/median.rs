@@ -17,3 +17,56 @@ pub fn get_median<T: PartialOrd + Copy + Into<f64>>(v: &[T]) -> Option<f64>
 
   Some(median)
 }
+
+#[cfg(test)]
+mod tests {
+  use super::*;
+
+  #[test]
+  fn test_get_median_empty() {
+    let v: Vec<f64> = vec![];
+    assert_eq!(get_median(&v), None);
+  }
+
+  #[test]
+  fn test_get_median_single_element() {
+    let v = vec![1.0];
+    assert_eq!(get_median(&v), Some(1.0));
+  }
+
+  #[test]
+  fn test_get_median_two_elements() {
+    let v = vec![1.0, 3.0];
+    assert_eq!(get_median(&v), Some(2.0));
+  }
+
+  #[test]
+  fn test_get_median_odd_number_of_elements() {
+    let v = vec![3.0, 1.0, 2.0];
+    assert_eq!(get_median(&v), Some(2.0));
+  }
+
+  #[test]
+  fn test_get_median_even_number_of_elements() {
+    let v = vec![4.0, 1.0, 3.0, 2.0];
+    assert_eq!(get_median(&v), Some(2.5));
+  }
+
+  #[test]
+  fn test_get_median_with_integers() {
+    let v = vec![4, 1, 3, 2];
+    assert_eq!(get_median(&v), Some(2.5));
+  }
+
+  #[test]
+  fn test_get_median_with_negative_numbers() {
+    let v = vec![-1.0, -2.0, -3.0];
+    assert_eq!(get_median(&v), Some(-2.0));
+  }
+
+  #[test]
+  fn test_get_median_with_mixed_numbers() {
+    let v = vec![1.0, -1.0, 0.0];
+    assert_eq!(get_median(&v), Some(0.0));
+  }
+}

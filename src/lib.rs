@@ -21,26 +21,26 @@ impl LevenshteinMatch {
     pub fn new(
         score: impl Into<f64>,
         substring: impl Into<String>,
-        start_index: impl Into<usize>,
-        end_index: impl Into<usize>,
+        start_index: usize,
+        end_index: usize,
     ) -> Self {
         Self {
             score: score.into(),
             substring: substring.into(),
-            start_index: start_index.into(),
-            end_index: end_index.into(),
+            start_index,
+            end_index,
         }
     }
 }
 
 impl Match {
     pub fn new(
-        median: impl Into<f64>,
+        median: f64,
         candidate: impl Into<String>,
         matches: impl Into<Vec<LevenshteinMatch>>,
     ) -> Self {
         Self {
-            median: median.into(),
+            median,
             candidate: candidate.into(),
             matches: matches.into(),
         }
@@ -49,7 +49,7 @@ impl Match {
 
 pub fn fuzzy_match(
     query: &str,
-    candidates: &Vec<&str>,
+    candidates: &[&str],
     threshold: f64,
     substring_min_length: usize,
 ) -> Vec<Match> {
@@ -123,18 +123,14 @@ pub fn fuzzy_match(
                 .cloned()
                 .collect();
 
-            if median >= threshold {
-                Some(Match::new(median, *candidate, filtered_matches))
-            } else {
-                None
-            }
+            (median >= threshold).then(|| Match::new(median, *candidate, filtered_matches))
         })
         .collect::<Vec<_>>();
 
     matches.sort_by(|a, b| {
         b.median
             .partial_cmp(&a.median)
-            .expect("medians should be comparable")
+            .expect("Medians should be comparable")
     });
 
     matches
