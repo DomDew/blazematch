@@ -1,4 +1,4 @@
-use blazematch::{fuzzy_match, LevenshteinMatch, Match};
+use blazematch::{fuzzy_match, FuzzyMatchOptions, LevenshteinMatch, Match};
 
 #[test]
 fn test_a_short_query_against_longer_candidates() {
@@ -12,7 +12,15 @@ fn test_a_short_query_against_longer_candidates() {
 
     let query = "kitten";
 
-    let actual = fuzzy_match(query, &candidates, 0.1, 0);
+    let options = FuzzyMatchOptions {
+        threshold: 0.1,
+        substring_min_length: 1,
+        deletion_cost: 5,
+        insertion_cost: 2,
+        substition_cost: 1,
+    };
+
+    let actual = fuzzy_match(query, &candidates, options);
 
     let expected = vec![
         Match::new(
@@ -42,7 +50,15 @@ fn test_with_lax_settings() {
 
     let query = "I need kitten";
 
-    let actual = fuzzy_match(query, &candidates, 0.0, 0);
+    let options = FuzzyMatchOptions {
+        threshold: 0.0,
+        substring_min_length: 1,
+        deletion_cost: 5,
+        insertion_cost: 2,
+        substition_cost: 1,
+    };
+
+    let actual = fuzzy_match(query, &candidates, options);
 
     let expected = vec![
         Match::new(
@@ -106,7 +122,15 @@ fn test_with_strict_settings() {
 
     let query = "I need kitten";
 
-    let actual = fuzzy_match(query, &candidates, 0.8, 4);
+    let options = FuzzyMatchOptions {
+        threshold: 0.8,
+        substring_min_length: 4,
+        deletion_cost: 5,
+        insertion_cost: 2,
+        substition_cost: 1,
+    };
+
+    let actual = fuzzy_match(query, &candidates, options);
 
     let expected = vec![
         Match::new(
