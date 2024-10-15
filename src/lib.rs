@@ -216,3 +216,23 @@ pub fn fuzzy_match(query: &str, candidates: &[&str], options: FuzzyMatchOptions)
 
     matches
 }
+
+pub trait FuzzyMatch<Q: ToString> {
+    fn fuzzy_match(&self, query: Q, options: FuzzyMatchOptions) -> Vec<Match>;
+}
+
+impl<T: ToString, Q: ToString> FuzzyMatch<Q> for Vec<T> {
+    fn fuzzy_match(&self, query: Q, options: FuzzyMatchOptions) -> Vec<Match> {
+        let candidate_strings: Vec<String> = self.iter().map(|s| s.to_string()).collect();
+        let candidates: Vec<&str> = candidate_strings.iter().map(|s| s.as_str()).collect();
+        fuzzy_match(&query.to_string(), &candidates, options)
+    }
+}
+
+impl<T: ToString, Q: ToString, const N: usize> FuzzyMatch<Q> for [T; N] {
+    fn fuzzy_match(&self, query: Q, options: FuzzyMatchOptions) -> Vec<Match> {
+        let candidate_strings: Vec<String> = self.iter().map(|s| s.to_string()).collect();
+        let candidates: Vec<&str> = candidate_strings.iter().map(|s| s.as_str()).collect();
+        fuzzy_match(&query.to_string(), &candidates, options)
+    }
+}

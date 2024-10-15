@@ -1,12 +1,11 @@
-use blazematch::{fuzzy_match, FuzzyMatchOptions, LevenshteinMatch, Match};
+use blazematch::{FuzzyMatch, FuzzyMatchOptions, LevenshteinMatch, Match};
 
 #[test]
-fn test_with_default_options() {
-    let candidates = vec!["kitten", "bitten", "smitten"];
+fn test_string_type_against_array_with_default_options() {
+    let candidates = ["kitten", "bitten", "smitten"];
+    let query = String::from("kitten");
 
-    let query = "kitten";
-
-    let actual = fuzzy_match(query, &candidates, FuzzyMatchOptions::default());
+    let actual = candidates.fuzzy_match(query, FuzzyMatchOptions::default());
 
     let expected = vec![
         Match::new(
@@ -31,15 +30,13 @@ fn test_with_default_options() {
 
 #[test]
 fn test_a_short_query_against_longer_candidates() {
-    let candidates = vec![
+    let candidates: Vec<&str> = vec![
         "I desperately need a kitten",
         "I desperately need a mitten",
         "I am a butterfly and need food",
         "You need food",
         "This is a banana",
     ];
-
-    let query = "kitten";
 
     let options = FuzzyMatchOptions {
         threshold: 0.1,
@@ -49,7 +46,7 @@ fn test_a_short_query_against_longer_candidates() {
         substition_cost: 1,
     };
 
-    let actual = fuzzy_match(query, &candidates, options);
+    let actual = candidates.fuzzy_match("kitten", options);
 
     let expected = vec![
         Match::new(
@@ -77,8 +74,6 @@ fn test_with_lax_settings() {
         "This is a banana",
     ];
 
-    let query = "I need kitten";
-
     let options = FuzzyMatchOptions {
         threshold: 0.0,
         substring_min_length: 1,
@@ -87,7 +82,7 @@ fn test_with_lax_settings() {
         substition_cost: 1,
     };
 
-    let actual = fuzzy_match(query, &candidates, options);
+    let actual = candidates.fuzzy_match("I need kitten", options);
 
     let expected = vec![
         Match::new(
@@ -149,8 +144,6 @@ fn test_with_strict_settings() {
         "This is a banana",
     ];
 
-    let query = "I need kitten";
-
     let options = FuzzyMatchOptions {
         threshold: 0.8,
         substring_min_length: 4,
@@ -159,7 +152,7 @@ fn test_with_strict_settings() {
         substition_cost: 1,
     };
 
-    let actual = fuzzy_match(query, &candidates, options);
+    let actual = candidates.fuzzy_match("I need kitten", options);
 
     let expected = vec![
         Match::new(
