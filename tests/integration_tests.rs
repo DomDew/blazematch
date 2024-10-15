@@ -1,6 +1,35 @@
 use blazematch::{fuzzy_match, FuzzyMatchOptions, LevenshteinMatch, Match};
 
 #[test]
+fn test_with_default_options() {
+    let candidates = vec!["kitten", "bitten", "smitten"];
+
+    let query = "kitten";
+
+    let actual = fuzzy_match(query, &candidates, FuzzyMatchOptions::default());
+
+    let expected = vec![
+        Match::new(
+            1.0,
+            "kitten",
+            vec![LevenshteinMatch::new(1.0, "kitten", 0, 6)],
+        ),
+        Match::new(
+            0.8187307530779818,
+            "bitten",
+            vec![LevenshteinMatch::new(0.8187307530779818, "bitten", 0, 6)],
+        ),
+        Match::new(
+            0.6065306597126334,
+            "smitten",
+            vec![LevenshteinMatch::new(0.6065306597126334, "smitten", 0, 7)],
+        ),
+    ];
+
+    assert_eq!(actual, expected);
+}
+
+#[test]
 fn test_a_short_query_against_longer_candidates() {
     let candidates = vec![
         "I desperately need a kitten",

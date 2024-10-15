@@ -166,6 +166,18 @@ pub struct FuzzyMatchOptions {
     pub substition_cost: usize,
 }
 
+impl Default for FuzzyMatchOptions {
+    fn default() -> Self {
+        Self {
+            threshold: 0.6,
+            substring_min_length: 3,
+            deletion_cost: 1,
+            insertion_cost: 1,
+            substition_cost: 1,
+        }
+    }
+}
+
 pub fn fuzzy_match(query: &str, candidates: &[&str], options: FuzzyMatchOptions) -> Vec<Match> {
     let FuzzyMatchOptions {
         threshold,
