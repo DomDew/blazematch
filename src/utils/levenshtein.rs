@@ -12,6 +12,7 @@ pub fn get_distance(
     for i in 0..=m {
         dp[i][0] = i * del_cost;
     }
+
     for j in 0..=n {
         dp[0][j] = j * ins_cost;
     }
@@ -38,7 +39,7 @@ pub fn normalize_similarity(shorter_string_length: usize, distance: usize) -> f6
         return 0.0;
     }
 
-    return 1.0 / f64::exp(distance as f64 / (shorter_string_length as f64 - distance as f64));
+    1.0 / f64::exp(distance as f64 / (shorter_string_length as f64 - distance as f64))
 }
 #[cfg(test)]
 mod tests {

@@ -58,7 +58,7 @@ fn build_levenshtein_match(
 ) -> LevenshteinMatch {
     let levenshtein_distance = levenshtein::get_distance(
         query_substring,
-        &candidate_substring,
+        candidate_substring,
         deletion_cost,   // 5
         insertion_cost,  // 2
         substition_cost, // 1
@@ -154,7 +154,7 @@ fn get_match(
         .cloned()
         .collect();
 
-    (median >= threshold).then(|| Match::new(median, &*candidate, filtered_matches))
+    (median >= threshold).then(|| Match::new(median, candidate, filtered_matches))
 }
 
 #[derive(Debug)]
